@@ -4,12 +4,23 @@ const { generateOTP } = require('../utils/generateOTP.js');
 const { sendEmail } = require('./emailService.js');
 const { generateToken } = require('../utils/generateToken.js');
 
+
+// 👤 PROFILE
+const userProfile = async (userId) => {
+  const user = await User.findById(userId).select('-password');
+    if (!user) throw new Error("User not found");
+    return user;
+
+};
+
+
 // 🔐 REGISTER
  const registerUser = async (email, password) => {
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     throw new Error('User already exists');
-  }
+   }
+   
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -21,7 +32,7 @@ const { generateToken } = require('../utils/generateToken.js');
     otp,
     otpExpire: Date.now() + 5 * 60 * 1000, // 5 min
   });
-
+  console.log('User created:', user); // Debug log
   await sendEmail(email, 'OTP Verification', `Your OTP is ${otp}`);
 
   return { message: 'OTP sent to email' };
@@ -62,4 +73,4 @@ const verifyUserOTP = async (email, otp) => {
   return { token, user };
 };
 
-module.exports = { registerUser, verifyUserOTP, loginUser };
+module.exports = { userProfile, registerUser, verifyUserOTP, loginUser };

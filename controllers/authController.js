@@ -2,7 +2,15 @@ const {
   registerUser,
   verifyUserOTP,
   loginUser,
+  userProfile,
 } = require('../services/authService.js');
+
+
+// GET PROFILE
+const getProfile = async (req, res) => {
+      const data = await userProfile(req.user.id);
+      res.json(data);
+};
 
 // REGISTER
 const register = async (req, res) => {
@@ -28,7 +36,7 @@ const login = async (req, res) => {
     // secure: true,
     // sameSite: 'strict', // for production
   });
-  res.json({ user });
+  res.json({ user , token});
 };
 
 // LOGOUT
@@ -37,4 +45,4 @@ const logout = (req, res) => {
   res.json({ message: 'Logged out' });
 };
 
-module.exports = { register, verifyOTP, login, logout };
+module.exports = { getProfile, register, verifyOTP, login, logout };
