@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^3.0.3",
+    "colors": "^1.4.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "crypto": "^1.0.1",

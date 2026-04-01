@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const colors = require('colors');
 const connectDB = require('./config/db');
 
 const authRoutes = require('./routes/authRoutes');
@@ -42,7 +43,7 @@ app.use((err, req, res, next) => {
   try {
     await connectDB();
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`Server running on port ${PORT}`.rainbow.bgWhite.bold);
     });
   } catch (error) {
     console.error('Failed to connect to the database', error);
