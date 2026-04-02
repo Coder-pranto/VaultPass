@@ -9,11 +9,9 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const { data } = await API.post('/auth/login', { email, password });
+      await API.post('/auth/login', { email, password });
 
-      localStorage.setItem('chat-user', JSON.stringify(data.user));
-
-      navigate('/'); // 🔥 redirect dashboard
+      navigate('/'); // dashboard
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed');
     }
@@ -34,6 +32,10 @@ export default function Login() {
 
       <p>
         Don’t have an account? <Link to='/register'>Register</Link>
+      </p>
+
+      <p>
+        Forgot password? <Link to='/forgot'>Reset</Link>
       </p>
     </div>
   );

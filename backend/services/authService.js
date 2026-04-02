@@ -2,8 +2,9 @@ const crypto = require('crypto');
 const User = require('../models/User.js');
 const bcrypt = require('bcryptjs');
 const { generateOTP } = require('../utils/generateOTP.js');
-const { sendEmail } = require('./emailService.js');
 const { generateToken } = require('../utils/generateToken.js');
+const { getResetPasswordTemplate } = require('../templates/emailTemplates.js');
+const { sendEmail } = require('./emailService.js');
 
 // 👤 PROFILE
 const userProfile = async (userId) => {
@@ -90,13 +91,19 @@ const forgotPassword = async (email) => {
 
   await user.save();
   //console.log('Reset token generated:', resetToken); // Debug log
+ const baseURL =
+   process.env.NODE_ENV === 'production'
+     ? process.env.CLIENT_URL
+     : 'http://localhost:5173';
 
-  const resetLink = `http://localhost:5173/reset-password/${resetToken}`;
-  //const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`; //FOR PRODUCTION
+ const resetLink = `${baseURL}/reset-password/${resetToken}`;
 
-  await sendEmail(email, 'Reset Password', `Click: ${resetLink}`);
+ const html = getResetPasswordTemplate(user?.name, resetLink);
 
-  return { message: 'Reset link sent' };
+ await sendEmail(email, 'Reset Your Password 🔐', html);
+
+ return { message: 'Reset link sent successfully' };
+
 };
 
 //🔑 RESET PASSWORD

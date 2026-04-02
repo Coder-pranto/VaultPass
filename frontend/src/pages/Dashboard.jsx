@@ -1,12 +1,26 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import API from '../api';
+import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const res = await API.get('/auth/me');
+      setUser(res.data);
+    } catch (error) {
+      navigate('/login');
+    }
+  };
+
+  fetchUser();
+}, []);
+
+  const logout = async () => {
     await API.post('/auth/logout');
-    localStorage.removeItem('chat-user');
     navigate('/login');
   };
 
@@ -14,7 +28,9 @@ export default function Dashboard() {
     <div>
       <h2>Dashboard</h2>
 
-      <button onClick={handleLogout}>Logout</button>
+      {user ? <p>{user.email}</p> : <p>Loading...</p>}
+
+      <button onClick={logout}>Logout</button>
     </div>
   );
 }

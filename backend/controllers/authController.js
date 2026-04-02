@@ -32,13 +32,10 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   const { token, user } = await loginUser(email, password);
   res.cookie('token', token, {
-    httpOnly: true,
-    secure: false,
-    // secure: true,
-    // sameSite: 'strict', // for production
-    sameSite: 'lax', // for development
+    httpOnly: true,//Note: Because you set httpOnly:true , JavaScript in the frontend cannot read the cookie directly (`document.cookie` won’t show it).
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', 
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    
   });
   res.json({ user });
 };

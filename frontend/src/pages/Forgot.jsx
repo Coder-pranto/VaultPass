@@ -1,23 +1,51 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import API from '../api';
 
 export default function Forgot() {
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handle = async () => {
+  const handleForgot = async () => {
+    if (!email) return alert('Please enter email');
+
     try {
+      setLoading(true);
+
       await API.post('/auth/forgot-password', { email });
-      alert('Check email!');
+
+      setTimeout(() => {
+        alert('Reset link sent to email');
+        setLoading(false);
+        navigate('/login');
+      }, 800);
     } catch (err) {
-      alert(err.response.data.message);
+      setLoading(false);
+      alert(err.response?.data?.message || 'Something went wrong');
     }
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: '400px', margin: 'auto' }}>
       <h2>Forgot Password</h2>
-      <input onChange={(e) => setEmail(e.target.value)} />
-      <button onClick={handle}>Send</button>
+
+      <input
+        placeholder='Email'
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <button
+        onClick={handleForgot}
+        disabled={loading}
+        style={{
+          background: loading ? '#999' : '#4CAF50',
+          cursor: loading ? 'not-allowed' : 'pointer',
+        }}
+      >
+        {loading ? 'Sending...' : 'Send Reset Link'}
+      </button>
     </div>
   );
 }
