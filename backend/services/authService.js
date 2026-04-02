@@ -3,7 +3,10 @@ const User = require('../models/User.js');
 const bcrypt = require('bcryptjs');
 const { generateOTP } = require('../utils/generateOTP.js');
 const { generateToken } = require('../utils/generateToken.js');
-const { getResetPasswordTemplate } = require('../templates/emailTemplates.js');
+const {
+  getResetPasswordTemplate,
+  getOTPTemplate,
+} = require('../templates/emailTemplates.js');
 const { sendEmail } = require('./emailService.js');
 
 // 👤 PROFILE
@@ -31,7 +34,9 @@ const registerUser = async (email, password) => {
     otpExpire: Date.now() + 5 * 60 * 1000, // 5 min
   });
 
-  await sendEmail(email, 'OTP Verification', `Your OTP is ${otp}`);
+  const html = getOTPTemplate(user.email, otp);
+
+  await sendEmail(email, 'Verify Your Account 🔐', html);
 
   return { message: 'OTP sent to email' };
 };
