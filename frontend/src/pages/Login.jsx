@@ -8,17 +8,23 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      return alert('Please fill all fields');
+    }
     try {
       await API.post('/auth/login', { email, password });
+      setTimeout(() => {
+        alert('Login successful');
+        navigate('/'); // dashboard
+      }, 800);
 
-      navigate('/'); // dashboard
     } catch (err) {
       alert(err.response?.data?.message || 'Login failed');
     }
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: '400px', margin: 'auto' }}>
       <h2>Login</h2>
 
       <input placeholder='Email' onChange={(e) => setEmail(e.target.value)} />
@@ -31,7 +37,7 @@ export default function Login() {
       <button onClick={handleLogin}>Login</button>
 
       <p>
-        Don’t have an account? <Link to='/register'>Register</Link>
+        {'Don’t have an account?'} <Link to='/register'>Register</Link>
       </p>
 
       <p>

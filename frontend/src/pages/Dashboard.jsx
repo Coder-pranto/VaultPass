@@ -12,12 +12,13 @@ useEffect(() => {
       const res = await API.get('/auth/me');
       setUser(res.data);
     } catch (error) {
+      console.log(error);
       navigate('/login');
     }
   };
 
   fetchUser();
-}, []);
+}, [navigate]);
 
   const logout = async () => {
     await API.post('/auth/logout');
