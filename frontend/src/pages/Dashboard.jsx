@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
-import API from '../api';
+import { fetchMe, logoutAPI } from '../api';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../context/useAuthContext';
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
+  const {checkAuth} = useAuthContext();
   const navigate = useNavigate();
 
 useEffect(() => {
   const fetchUser = async () => {
     try {
-      const res = await API.get('/auth/me');
-      setUser(res.data);
+      const { data } = await fetchMe();
+      setUser(data);
     } catch (error) {
       console.log(error);
       navigate('/login');
@@ -20,8 +22,9 @@ useEffect(() => {
   fetchUser();
 }, [navigate]);
 
-  const logout = async () => {
-    await API.post('/auth/logout');
+  const handleLogout = async () => {
+    await logoutAPI();
+    checkAuth(); // 👈 update auth state
     navigate('/login');
   };
 
@@ -31,7 +34,7 @@ useEffect(() => {
 
       {user ? <p>{user.email}</p> : <p>Loading...</p>}
 
-      <button onClick={logout}>Logout</button>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 }

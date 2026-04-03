@@ -1,10 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
-import API from '../api';
+import { loginAPI } from '../api';
 import { useState } from 'react';
+import { useAuthContext } from '../context/useAuthContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { checkAuth } = useAuthContext(); 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -12,13 +15,17 @@ export default function Login() {
       return alert('Please fill all fields');
     }
     try {
-      await API.post('/auth/login', { email, password });
+       setLoading(true);
+      await loginAPI({ email, password });
       setTimeout(() => {
-        alert('Login successful');
+        checkAuth(); // 👈 update auth state
         navigate('/'); // dashboard
-      }, 800);
+        setLoading(false);
+        alert('Login successful');
+      }, 1500);
 
     } catch (err) {
+      setLoading(false);
       alert(err.response?.data?.message || 'Login failed');
     }
   };
@@ -34,7 +41,16 @@ export default function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button onClick={handleLogin}>Login</button>
+      <button
+        onClick={handleLogin}
+        disabled={loading}
+        style={{
+          background: loading ? '#999' : '#4CAF50',
+          cursor: loading ? 'not-allowed' : 'pointer',
+        }}
+      >
+        {loading ? 'Logging in...' : 'Login'} 
+      </button>
 
       <p>
         {'Don’t have an account?'} <Link to='/register'>Register</Link>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import API from '../api';
+import { resetPasswordAPI } from '../api';
 
 export default function Reset() {
   const [password, setPassword] = useState('');
@@ -9,7 +9,7 @@ export default function Reset() {
 
   const handleReset = async () => {
     try {
-      await API.post(`/auth/reset-password/${token}`, { password });
+      await resetPasswordAPI({ token, password });
       alert('Password updated');
       navigate('/login');
     } catch (err) {

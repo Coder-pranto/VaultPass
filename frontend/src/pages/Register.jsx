@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import API from '../api';
+import { registerAPI } from '../api';
 import { useState } from 'react';
 
 export default function Register() {
@@ -14,12 +14,10 @@ export default function Register() {
       return alert('Please fill all fields');
     }
 
-    if (loading) return;
-
     try {
       setLoading(true);
 
-      await API.post('/auth/register', { email, password });
+      await registerAPI({ email, password });
 
       setTimeout(() => {
         alert('OTP sent to email');

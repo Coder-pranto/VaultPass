@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import API from '../api';
+import { verifyOtpAPI } from '../api';
 import { useNavigate } from 'react-router-dom';
 
 export default function Verify() {
@@ -9,7 +9,7 @@ export default function Verify() {
 
   const handleVerify = async () => {
     try {
-      await API.post('/auth/verify-otp', { email, otp });
+      await verifyOtpAPI({ email, otp });
       alert('Verified!');
       navigate('/login');
     } catch (err) {

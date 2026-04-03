@@ -8,10 +8,7 @@ import Forgot from '../pages/Forgot';
 import Reset from '../pages/Reset';
 
 import ProtectedRoute from './ProtectedRoute';
-import PublicRoute from './PublicRoute';
 import Layout from '../layout/Layout';
-
-
 
 export const router = createBrowserRouter([
   {
@@ -27,19 +24,11 @@ export const router = createBrowserRouter([
       },
       {
         path: '/login',
-        element: (
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        ),
+        element: <Login />,
       },
       {
         path: '/register',
-        element: (
-          <PublicRoute>
-            <Register />
-          </PublicRoute>
-        ),
+        element: <Register />,
       },
       { path: '/verify', element: <Verify /> },
       { path: '/forgot', element: <Forgot /> },

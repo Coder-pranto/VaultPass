@@ -1,30 +1,12 @@
 import { Navigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import API from '../api';
+import { useAuthContext } from '../context/useAuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const [loading, setLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(false);
+  const { isAuth, loading } = useAuthContext();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        await API.get('/auth/me');
-        setIsAuth(true);
-      // eslint-disable-next-line no-unused-vars
-      } catch (err) {
-        setIsAuth(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+  if (loading) return <p>Checking...</p>;
 
-    checkAuth();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-
-  return isAuth ? children : <Navigate to='/login' />;
+  return isAuth ? children : <Navigate to='/login' replace />;
 };
 
 export default ProtectedRoute;

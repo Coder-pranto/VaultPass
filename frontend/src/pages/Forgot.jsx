@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import API from '../api';
+import { forgotPasswordAPI } from '../api';
 
 export default function Forgot() {
   const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ export default function Forgot() {
     try {
       setLoading(true);
 
-      await API.post('/auth/forgot-password', { email });
+      await forgotPasswordAPI({ email });
 
       setTimeout(() => {
         alert('Reset link sent to email');
