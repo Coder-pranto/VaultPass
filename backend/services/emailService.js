@@ -47,7 +47,7 @@
 //! testing with ethereal
 const nodemailer = require('nodemailer');
 
-async function sendEmail(to, subject, text) {
+const sendEmail = async (to, subject, text) => {
   const testAccount = await nodemailer.createTestAccount();
 
   const transporter = nodemailer.createTransport({
@@ -70,3 +70,5 @@ async function sendEmail(to, subject, text) {
   console.log('Message sent:', info.messageId);
   console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
 }
+
+module.exports = { sendEmail };
